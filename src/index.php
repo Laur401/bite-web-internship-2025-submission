@@ -8,13 +8,13 @@ if (isset($_POST["destroy"])){ session_destroy(); session_start();}
 
 /**
  * Initializes the integer array if it has not already been set in a session.
- * Reads the data from the input.txt file (or kills the script if not available),
+ * Reads the data from the input.txt file (or if there is an exception serves a default 0 array),
  * sorts it and stores it a session variable.
  * Also puts the last (biggest) element into a separate variable for later manipulation.
  */
 if (!isset($_SESSION["integerArray"])) {
     try {
-        $integerArray = readFileToArray("../data/input.txt");
+        $integerArray = readFileToNumericArray("../data/input.txt");
     } catch (Exception $e){
         error_log($e);
         $integerArray = array(0);
@@ -33,7 +33,7 @@ $integerArray =& $_SESSION["integerArray"];
 $inputElement =& $_SESSION["inputElement"];
 
 /**
- * Checks if a POST subtract/add variables are set, and if so, calls the appropriate function.
+ * Checks if a POST subtract/add variable is set, and if so, calls the appropriate function.
  */
 if (isset($_POST["subtract"])){
     subtract($inputElement, 5);
@@ -44,8 +44,8 @@ if (isset($_POST["add"])){
 
 /**
  * Adds a specified amount to the provided element.
- * @param int $element
- * @param int $count
+ * @param int $element Element to add the amount onto.
+ * @param int $count The amount to add to the element.
  * @return void
  */
 function add(int &$element, int $count): void
@@ -55,8 +55,8 @@ function add(int &$element, int $count): void
 
 /**
  * Subtracts a specified amount from the provided element, making sure it does not go below 0.
- * @param int $element
- * @param int $count
+ * @param int $element Element to subtract the amount from.
+ * @param int $count The amount to subtract from the element.
  * @return void
  */
 function subtract(int &$element, int $count): void
@@ -66,15 +66,16 @@ function subtract(int &$element, int $count): void
 }
 
 /**
- * @param string $file
- * @return array
- * @throws Exception
+ * Reads a specified file and outputs it to an array, then filters out all non-numeric values.
+ * @param string $file The file to read the input from.
+ * @return array The array of values read from the file.
+ * @throws Exception If specified file does not exist.
  */
-function readFileToArray(string $file): array{
+function readFileToNumericArray(string $file): array{
     $integerArray = @file($file, FILE_IGNORE_NEW_LINES);
     if ($integerArray === false) {
         $e = error_get_last()['message'];
-        throw new Exception("Unable to open input.txt file. $e");
+        throw new Exception("Unable to open file. $e");
     }
     array_filter($integerArray, "is_numeric");
     return $integerArray;
