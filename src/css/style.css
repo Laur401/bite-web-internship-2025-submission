@@ -1,0 +1,14 @@
+html {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font: 400 1rem "Commissioner", sans-serif;
+}
+.header{
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+.numberList {
+    margin-bottom: 2rem;
+}
+

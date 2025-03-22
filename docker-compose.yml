@@ -1,0 +1,14 @@
+services:
+  web:
+    image: php:8.4-apache
+    container_name: BITE-php-task
+    volumes:
+      - ./src:/var/www/html
+      - ./data:/var/www/data
+    ports:
+      - "8080:80"
+    environment:
+      - PHP_MEMORY_LIMIT=128M
+      - UPLOAD_MAX_FILESIZE=10M
+      - POST_MAX_SIZE=10M
+    restart: unless-stopped
