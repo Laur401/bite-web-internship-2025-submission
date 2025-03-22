@@ -100,12 +100,12 @@ function readFileToNumericArray(string $file): array{
     </div>
     <div class="header">Highest number</div>
 
-    <form method='post' action=''>
+    <form class='control-form' method='post' action=''>
         <?php
         echo "<input type='text' name='inp' value='$inputElement' disabled/>"
         ?>
-        <button name="subtract" type="submit">-</button>
-        <button name="add" type="submit">+</button>
-        <button name="destroy" type="submit">Destroy Session</button>
+        <button class="button" name="subtract" type="submit">-</button>
+        <button class="button" name="add" type="submit">+</button>
+        <!-- <button class="button" name="destroy" type="submit">Destroy Session</button> -->
     </form>
 </div>
