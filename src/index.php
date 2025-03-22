@@ -14,14 +14,15 @@ if (isset($_POST["destroy"])){ session_destroy(); session_start();}
  */
 if (!isset($_SESSION["integerArray"])) {
     try {
-        $integerArray = readFileToNumericArray("../data/input.txt");
+        $integerArray = readFileToNumericArray(__DIR__ . "/../data/input.txt");
     } catch (Exception $e){
         error_log($e);
         $integerArray = array(0);
     }
     sort($integerArray);
-    $_SESSION["integerArray"] = $integerArray;
-    $_SESSION["inputElement"] = $integerArray[array_key_last($integerArray)];
+    $_SESSION["integerArray"] = &$integerArray;
+    $_SESSION["inputElementKey"] = array_key_last($integerArray);
+    $_SESSION["inputElement"] = &$integerArray[$_SESSION["inputElementKey"]];
 }
 
 /**
@@ -31,15 +32,19 @@ if (!isset($_SESSION["integerArray"])) {
 $integerArray =& $_SESSION["integerArray"];
 /** @var int $inputElement */
 $inputElement =& $_SESSION["inputElement"];
+/** @var int $inputElementKey */
+$inputElementKey =& $_SESSION["inputElementKey"];
 
 /**
  * Checks if a POST subtract/add variable is set, and if so, calls the appropriate function.
  */
 if (isset($_POST["subtract"])){
     subtract($inputElement, 5);
+    sortChangedNumber($integerArray, $inputElementKey);
 }
 if (isset($_POST["add"])){
     add($inputElement, 5);
+    sortChangedNumber($integerArray, $inputElementKey);
 }
 
 /**
@@ -71,7 +76,7 @@ function subtract(int &$element, int $count): void
  * @return array The array of values read from the file.
  * @throws Exception If specified file does not exist.
  */
-function readFileToNumericArray(string $file): array{
+function readFileToNumericArray(string $file): array {
     $integerArray = @file($file, FILE_IGNORE_NEW_LINES);
     if ($integerArray === false) {
         $e = error_get_last()['message'];
@@ -79,6 +84,70 @@ function readFileToNumericArray(string $file): array{
     }
     array_filter($integerArray, "is_numeric");
     return $integerArray;
+}
+
+/**
+ * Sorts the changed number into the array. Uses exponential search-based algorithm.
+ * @param array $integerArray The array to sort in.
+ * @param int $integerArrayElementKey The key of the number that is to be sorted.
+ * @return void
+ */
+function sortChangedNumber(array &$integerArray, int &$integerArrayElementKey): void {
+    // Helper function to move the element into a specified position in the array.
+    function moveArrayElement(array $array, int $arrayElementKey, int $moveTo): array {
+        $el = array_splice($array, $arrayElementKey, 1);
+        $top = array_splice($array, 0, $moveTo);
+        return array_merge($top, $el, $array);
+    }
+    /**
+     * Helper function to determine whether the array key is in the correct place, needs to go left or needs to go right.
+     * @param array $array The array to check.
+     * @param int $arrayKey
+     * @param int $comparisonValue
+     * @param int $spec
+     * @return int
+     */
+    function elementPosition(array $array, int $arrayKey, int $comparisonValue, int $spec = 0): int {
+        if ($comparisonValue >= (@$array[$arrayKey-1]??PHP_INT_MIN) && $comparisonValue <= (@$array[$arrayKey+$spec]??PHP_INT_MAX)) {return 0;}
+        if ($comparisonValue < (@$array[$arrayKey-1]??PHP_INT_MIN)) {return -1;} //Go left
+        if ($comparisonValue >= (@$array[$arrayKey+$spec]??PHP_INT_MAX)){return 1;} //Go right
+        throw new Exception("Something wrong in elementPosition function.");
+    }
+
+    $status = PHP_INT_MAX;
+    $arrayPointer = $integerArrayElementKey;
+    $stepsCounter = 1/2;
+    $primer = 1; // Offset for initial search to avoid searching the searched object itself.
+    while ($status !== 0)
+    {
+        $stepsCounter*=2;
+        switch (elementPosition($integerArray, $arrayPointer, $integerArray[$integerArrayElementKey], $primer)){
+            case 0:
+                $status = 0;
+                break;
+            case -1:
+                if ($status!==-1){
+                    $stepsCounter = 1;
+                    $status = -1;
+                }
+                $arrayPointer-=$stepsCounter;
+                break;
+            case 1:
+                if ($status !== 1){
+                    $stepsCounter = 1;
+                    $status = 1;
+                }
+                $arrayPointer+=$stepsCounter;
+                break;
+        }
+        $primer = 0;
+        if ($arrayPointer >= count($integerArray)) {$arrayPointer = count($integerArray);}
+        if ($arrayPointer < 0) {$arrayPointer = 0;}
+    }
+
+    if ($arrayPointer > $integerArrayElementKey) {$arrayPointer--;} //For off-by-one error from array slicing if inserting to the right of original position.
+    $integerArray = moveArrayElement($integerArray, $integerArrayElementKey, $arrayPointer);
+    $integerArrayElementKey = $arrayPointer;
 }
 ?>
 <link rel="stylesheet" href="css/style.css" type="text/css">
@@ -106,6 +175,6 @@ function readFileToNumericArray(string $file): array{
         ?>
         <button class="button" name="subtract" type="submit">-</button>
         <button class="button" name="add" type="submit">+</button>
-        <!-- <button class="button" name="destroy" type="submit">Destroy Session</button> -->
+        <button class="button" name="destroy" type="submit">Destroy Session</button>
     </form>
 </div>
