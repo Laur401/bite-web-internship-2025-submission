@@ -11,6 +11,12 @@ html {
 .numberList {
     margin-bottom: 2rem;
 }
+.control-form {
+    display: flex;
+    flex-direction: row;
+    gap: 0.2rem;
+    height: 2rem;
+}
 .button {
     font: 400 1rem "Commissioner", sans-serif;
     background-color: rgb(38, 38, 38);
@@ -24,10 +30,4 @@ html {
 }
 input[type="text"]{
     font: 400 1rem "Commissioner", sans-serif;
-}
-.control-form {
-    display: flex;
-    flex-direction: row;
-    gap: 0.2rem;
-    height: 2rem;
 }
