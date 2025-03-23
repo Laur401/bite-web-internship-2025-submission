@@ -2,7 +2,8 @@
 
 This is my take of the Bitė Web Internship 2025 assessment task.
 
-This is the fleshed out variant of the submission. Check out the other branch for a simpler variant.
+> [!IMPORTANT]
+> This is the <b>fleshed out</b> variant of the submission. Check out the other branch for a simpler variant.
 
 ## Getting Started
 Code running options are the same as the ones provided for the task, which are listed below:
@@ -41,7 +42,7 @@ If you prefer not to use Docker:
 
 For the design of the page itself, I created a very simple interface based on the wireframe provided in the task 
 description.
-![page](page.png )
+![The design of the page](page.png)
 
 All the code in the file is kept inside the single index.php file, as I felt the scope of the project is narrow enough
 not to need additional separation.
