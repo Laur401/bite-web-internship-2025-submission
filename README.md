@@ -44,10 +44,13 @@ For the design of the page itself, I created a very simple interface based on th
 description.
 ![The design of the page](page.png)
 
-All the code in the file is kept inside the single index.php file, as I felt the scope of the project is narrow enough
+All the code in the project is kept inside the single index.php file, as I felt the scope of the project is narrow enough
 not to need additional separation.
 
+For this version of the project, I added the ability to edit the number directly via the text input, and also have the
+change reflected in the list itself.
+
 I created two algorithms for data sorting - a simple QuickSort algorithm with a random pivot selection for initial list
-sorting, and a custom exponential search-based algorithm for moving the input value around the list. The time complexity of
+sorting, and a custom exponential-search-based algorithm for moving the input value around the list. The time complexity of
 the custom algorithm is $(log_{2}n)^2$ for worst and average case, and $log_{2}n$ for best case. The space complexity is
 1\.
