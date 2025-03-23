@@ -22,6 +22,7 @@ if (!isset($_SESSION["integerArray"])) {
     sort($integerArray);
     $_SESSION["integerArray"] = $integerArray;
     $_SESSION["inputElement"] = $integerArray[array_key_last($integerArray)];
+    unset($_POST);
 }
 
 /**
@@ -74,10 +75,11 @@ function subtract(int &$element, int $count): void
 function readFileToNumericArray(string $file): array{
     $integerArray = @file($file, FILE_IGNORE_NEW_LINES);
     if ($integerArray === false) {
-        $e = error_get_last()['message'];
+        $e = error_get_last()['message'] ?? "";
         throw new Exception("Unable to open file. $e");
     }
-    array_filter($integerArray, "is_numeric");
+    $integerArray = array_filter($integerArray, "is_numeric");
+    $integerArray = array_merge($integerArray); // Remove gaps in array keys after filtering.
     return $integerArray;
 }
 ?>
@@ -109,3 +111,9 @@ function readFileToNumericArray(string $file): array{
         <!-- <button class="button" name="destroy" type="submit">Destroy Session</button> -->
     </form>
 </div>
+
+<script type="text/javascript"> // Disables submission of the form if page is refreshed.
+    if (window.history.replaceState){
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
