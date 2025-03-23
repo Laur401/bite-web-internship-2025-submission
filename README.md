@@ -1,22 +1,13 @@
 # Algorithm and Web Development Assessment
 
-## Task Description:
-1. Read a list of integers from the provided 'input.txt' file (one number per line)
-2. Sort the list in ascending order
-3. Create a simple web page that:
-   - Processes the file and sorting logic on the backend using PHP
-   - Displays the sorted list on a web page
-   - Shows the highest number from the list in a form input
-   - Implements functionality to increase or decrease this value by 5
-   - Ensures the value cannot go below zero
-   - Includes basic styling for readability
+This is my take of the Bitė Web Internship 2025 assessment task.
 
-## Technical Requirements:
-- Backend processing must be implemented in PHP
-- Frontend can use HTML5 features and JavaScript if necessary
-- The solution should be simple and efficient
+> [!IMPORTANT]
+> This is the <b>simple</b> variant of the submission. Check out the other branch for a more complex variant
+with more algorithms and capabilities.
 
 ## Getting Started
+Code running options are the same as the ones provided for the task, which are listed below:
 
 ### Option 1: Using Docker (Recommended)
 A Docker environment has been provided for your convenience.
@@ -34,9 +25,6 @@ If you prefer not to use Docker:
 2. Clone this repository to your web server's document root
 3. Access the application via your local web server
 
-### Wireframe
-![wireframe](wireframe.jpg "how it might look")
-
 
 ### Project Structure
 ```
@@ -46,19 +34,18 @@ If you prefer not to use Docker:
 │   └── input.txt              # Input file with random numbers
 ├── src/                       # Source code directory
 │   ├── index.php              # Main entry point
-│   └── css/                   # CSS files (if needed)
+│   └── css/                   # CSS file directory
+│       └── style.css          # Styling file
 └── README.md                  # This file
 ```
 
-## Submission:
-- Create a git (Github/Gitlab) repository with your solution
-- Include a README.md explaining how to run your code and any design decisions
-- Ensure your code is well-commented and follows best practices
+## Design decisions
 
-## Evaluation Criteria:
-- Correctness of the algorithm implementation
-- Understanding of time/space complexity
-- Proper use of PHP for backend processing
-- Efficient implementation of the increment/decrement functionality
-- Code organization and readability
-- Error handling
+For the design of the page itself, I created a very simple interface based on the wireframe provided in the task
+description.
+![The design of the page](page.png)
+
+All the code in the file is kept inside the single index.php file, as I felt the scope of the project is narrow enough
+not to need additional separation.
+
+For this variant, I only used the in-built PHP sort() function, based on QuickSort.
