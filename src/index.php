@@ -37,7 +37,7 @@ $inputElement =& $_SESSION["inputElement"];
 $inputElementKey =& $_SESSION["inputElementKey"];
 
 /**
- * Checks if a POST subtract/add variable is set, and if so, calls the appropriate function.
+ * Checks if a POST input/subtract/add variable is set, and if so, calls the appropriate function.
  */
 if (isset($_POST["inp"]) && intval($_POST["inp"]) != $inputElement){
     $inputElement = intval($_POST["inp"]);
@@ -90,7 +90,8 @@ function readFileToNumericArray(string $file): array {
         $e = error_get_last()['message'] ?? "";
         throw new Exception("Unable to open file. $e");
     }
-    array_filter($integerArray, "is_numeric");
+    $integerArray = array_filter($integerArray, "is_numeric");
+    $integerArray = array_merge($integerArray); // Remove gaps in array keys after filtering.
     return $integerArray;
 }
 
@@ -132,11 +133,17 @@ function sortChangedNumber(array &$integerArray, int &$integerArrayElementKey): 
 
     $status = PHP_INT_MAX;
     $arrayPointer = $integerArrayElementKey;
-    $stepsCounter = 1/2;
+    $stepsCounter = 1;
     $primer = 1; // Offset for initial search to avoid searching the searched object itself.
+    /**
+     * How the algorithm works:
+     * First, it checks whether the element in the current array pointer is too large, too small or the right size.
+     * Then, if it's too large or small, it moves to the left or right respectively by n steps (starting from n=1).
+     * If it overshot and changed direction, n is reset back to 1 before moving.
+     * Finally, n is doubled for the next step.
+     */
     while ($status !== 0)
     {
-        $stepsCounter*=2;
         switch ($element_position($integerArray, $arrayPointer, $integerArray[$integerArrayElementKey], $primer)){
             case 0:
                 $status = 0;
@@ -157,9 +164,12 @@ function sortChangedNumber(array &$integerArray, int &$integerArrayElementKey): 
                 break;
         }
         $primer = 0;
+
         // If the arrayPointer goes out of bounds, reset back to the bounds.
         if ($arrayPointer >= count($integerArray)) {$arrayPointer = count($integerArray);}
         if ($arrayPointer < 0) {$arrayPointer = 0;}
+
+        $stepsCounter*=2;
     }
 
     $integerArray = $move_array_element($integerArray, $integerArrayElementKey, $arrayPointer);
@@ -215,7 +225,7 @@ function quickSort(array $array): array{
         ?>
         <button class="button" name="subtract" type="submit">-</button>
         <button class="button" name="add" type="submit">+</button>
-        <button class="button" name="destroy" type="submit">Destroy Session</button>
+        <!-- <button class="button" name="destroy" type="submit">Destroy Session</button> -->
     </form>
 </div>
 
