@@ -45,7 +45,7 @@ For the design of the page itself, I created a very simple interface based on th
 description.
 ![The design of the page](page.png)
 
-All the code in the file is kept inside the single index.php file, as I felt the scope of the project is narrow enough
+All the code in the project is kept inside the single index.php file, as I felt the scope of the project is narrow enough
 not to need additional separation.
 
-For this variant, I only used the in-built PHP sort() function, based on QuickSort.
+For this variant, I only used the in-built PHP sort() function, based on QuickSort, to sort the list of numbers.
